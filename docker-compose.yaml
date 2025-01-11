@@ -1,0 +1,55 @@
+version: "2"
+
+services:
+  redis-master:
+    image: "bitnami/redis:latest"
+    restart: always
+    ports:
+      - "6370:6370"
+    environment:
+      # - ALLOW_EMPTY_PASSWORD=yes
+      - REDIS_REPLICATION_MODE=master
+      - REDIS_PASSWORD=12345678
+      - REDIS_PORT_NUMBER=6370
+    volumes:
+      - "./src:/bitnami"
+    networks:
+      - redis
+
+  redis-replica1:
+    image: "bitnami/redis:latest"
+    restart: always
+    ports:
+      - "6371:6371"
+    depends_on:
+      - redis-master
+    environment:
+      - REDIS_REPLICATION_MODE=slave
+      - REDIS_MASTER_HOST=redis-master
+      - REDIS_MASTER_PORT_NUMBER=6370
+      - REDIS_MASTER_PASSWORD=12345678
+      - REDIS_PASSWORD=my_replica_password
+      - REDIS_PORT_NUMBER=6371
+    networks:
+      - redis
+
+  redis-replica2:
+    image: "bitnami/redis:latest"
+    restart: always
+    ports:
+      - "6372:6372"
+    depends_on:
+      - redis-master
+    environment:
+      - REDIS_REPLICATION_MODE=slave
+      - REDIS_MASTER_HOST=redis-master
+      - REDIS_MASTER_PORT_NUMBER=6370
+      - REDIS_MASTER_PASSWORD=12345678
+      - REDIS_PASSWORD=my_replica_password
+      - REDIS_PORT_NUMBER=6372
+    networks:
+      - redis
+
+networks:
+  redis:
+    driver: "bridge"
