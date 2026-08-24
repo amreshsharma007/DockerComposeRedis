@@ -12,7 +12,10 @@ This repository provides a `docker-compose.yaml` file to set up a Redis replicat
   - `REDIS_PASSWORD`: `12345678`
   - `REDIS_PORT_NUMBER`: 6370
 - **Volumes**:
-  - `./src:/bitnami`: Maps local directory `./src` to the Redis data folder.
+  - `./src/redis/data:/bitnami/redis/data`: Maps the local Redis data directory to Bitnami's expected data path.
+- **User**:
+  - Bitnami Redis runs as a non-root user (`1001`) by default. The bind-mounted `./src/redis/data` directory must be owned by UID/GID `1001:1001` on the host.
+  - If you see `Permission denied` errors for `appendonlydir` or `redis.conf`, fix the host directory permissions before starting the stack.
 - **Network**: `redis`
 
 ### 2. **redis-replica1**

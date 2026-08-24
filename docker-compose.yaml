@@ -10,7 +10,7 @@ services:
       - REDIS_PASSWORD=12345678
       - REDIS_PORT_NUMBER=6370
     volumes:
-      - "./src:/bitnami"
+      - "./src/redis/data:/bitnami/redis/data"
     networks:
       - redis
 
